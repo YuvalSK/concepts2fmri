@@ -1,0 +1,6 @@
+paper: 
+https://elifesciences.org/articles/82580#s4
+
+dataset: 
+https://plus.figshare.com/collections/THINGS-data_A_multimodal_collection_of_large-scale_datasets_for_investigating_object_representations_in_brain_and_behavior/6161151
+
