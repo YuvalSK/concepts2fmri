@@ -7,7 +7,8 @@ Tutorials on THINGS dataset:
 - https://github.com/ViCCo-Group/THINGS-data/blob/main/MRI/notebooks/working_with_rois.ipynb
 
 To do:
-    1. One bug of the number of concepts. Found 119 but plots 60
+1. test how many concepts exist in the NSD dataset
+2. rerun the analysis with NSD 
 @author: YSK
 """
 import os, time
@@ -15,6 +16,7 @@ from os.path import join as pjoin
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy import spatial
 
 from thingsmri.dataset import ThingsmriLoader
 
@@ -56,6 +58,7 @@ count_exist = 0
 null = []
 df = pd.DataFrame()
 
+#we have 60 unique concepts 
 for c in set(concepts):
     plt.clf()
     print(f"--'{c}'")
@@ -63,15 +66,12 @@ for c in set(concepts):
     con_indices = stimdata.query(query).index
 
     if con_indices.any():
+        print("---found! plotting...")
         count_exist+=1
         df[c] = roidata[con_indices].mean(axis=1)
         #con_responses = responses[con_indices]
-        print("---found! plotting...")
-        plt.plot(range(len(df[c])), df[c].to_numpy(), c='k')
 
-        #plt.plot(range(len(con_indices)), roidata.iloc[1, con_indices].to_numpy(), c='r')
-        #plt.plot(range(len(con_indices)), roidata.iloc[2, con_indices].to_numpy(), c='g')
-        #plt.legend(["LOC voxel 1", "LOC voxel 2"], loc='lower right')
+        plt.plot(range(len(df[c])), df[c].to_numpy(), c='k')
         plt.xlabel(f'voxels');
         plt.ylabel('voxel amplitude')
         plt.title(f"Avg. LOC activity for '{c}' over {len(con_indices)} trials")
@@ -84,11 +84,6 @@ for c in set(concepts):
 print(f"--out of {len(set(concepts))}, {count_exist} exist, {count_null} not:\n---list of not: {null}")
 
 df.to_csv(f"sub{sub}_voxels.csv")
-
-#from scipy.spatial.distance import pdist, squareform
-#from sklearn.metrics.pairwise import cosine_similarity
-
-from scipy import spatial
 
 
 mix_concepts = pd.read_csv('concepts.csv')
@@ -105,22 +100,6 @@ for i, c in enumerate(mix_concepts['Concepts']):
         print(f"---not found!")
         
 pd.DataFrame(results).to_csv(f"sub{sub}_similarity.csv")
-
-    
-#sim_res = squareform(sim)
-
-
-
-'''
-loading only stim data:
-    
-    #basedir = os.getcwd()
-    #betas_csv_dir = pjoin(basedir, 'betas_csv')
-    #stim_f = pjoin(betas_csv_dir, f'sub-{sub}_StimulusMetadata.csv')
-    #stimdata = pd.read_csv(stim_f)
-    
-#three types of trials: train, test and catch. The latter with non-object
-'''
 
 
 
