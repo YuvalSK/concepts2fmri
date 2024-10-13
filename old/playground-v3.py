@@ -85,7 +85,6 @@ print(f"--out of {len(set(concepts))}, {count_exist} exist, {count_null} not:\n-
 
 df.to_csv(f"sub{sub}_voxels.csv")
 
-
 mix_concepts = pd.read_csv('concepts.csv')
 ex_concepts = df.columns.values
 
